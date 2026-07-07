@@ -1,6 +1,6 @@
 {
   "name": "NOSO Dashboard",
-  "short_name": "NOSO",
+  "short_name": "NOSO-Data",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0B132B",
