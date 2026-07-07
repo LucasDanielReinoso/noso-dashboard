@@ -1,7 +1,7 @@
 {
   "name": "NOSO Dashboard",
   "short_name": "NOSO",
-  "start_url": "./historial.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0B132B",
   "theme_color": "#5BC0BE",
