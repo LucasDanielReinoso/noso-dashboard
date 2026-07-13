@@ -45,7 +45,7 @@
             <td class="field-label">Presupuesto ($)</td>
             <td class="field-value"><input type="number" id="presupuesto" class="input-table" placeholder="Ej: 45000"></td>
             <td class="field-label">Categoría</td>
-            <td class="field-value"><input type="text" id="categoria" class="input-table" value="Aires Acondicionados"></td>
+            <td class="field-value"><input type="text" id="categoria" class="input-table" value="Lavarropas - Otros"></td>
         </tr>
     </table>
 
@@ -57,17 +57,17 @@
             <td class="field-label">Tecnología</td>
             <td class="field-value text-center">
                 <label class="label-check"><input type="checkbox" class="custom-check"> On-Off</label> &nbsp; &nbsp; 
-                <label class="label-check"><input type="checkbox" class="custom-check"> NoFrost</label>
+                <label class="label-check"><input type="checkbox" class="custom-check"> Inverter</label>
             </td>
         </tr>
         <tr>
             <td class="field-label">Modelo</td>
             <td class="field-value"><input type="text" id="modelo" class="input-table"></td>
-            <td class="field-label">Refrigerante</td>
+            <td class="field-label">Tipo</td>
             <td class="field-value text-center">
-                <label class="label-check"><input type="checkbox" class="custom-check"> R410A</label> &nbsp; 
-                <label class="label-check"><input type="checkbox" class="custom-check"> R600a</label> &nbsp; 
-                <label class="label-check"><input type="checkbox" class="custom-check"> R134a</label>
+                <label class="label-check"><input type="checkbox" class="custom-check"> Frontal</label> &nbsp; 
+                <label class="label-check"><input type="checkbox" class="custom-check"> Vertical</label> &nbsp; 
+                <label class="label-check"><input type="checkbox" class="custom-check"> Secarropas</label>
             </td>
         </tr>
         <!-- AQUI MOVIMOS LOS IDs FALTANTES DE CAPACIDAD Y SERIE -->
@@ -103,31 +103,31 @@
                 <td><input type="text" class="input-table text-center"></td>
             </tr>
             <tr>
-                <td class="left-align">Presión de Baja (Psi)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Psi"></td>
+                <td class="left-align">Blocapuertas</td>
+                <td><input type="text" class="input-table text-center" placeholder="Funciona o no"></td>
                 <td><input type="text" class="input-table text-center"></td>
                 <td><input type="text" class="input-table text-center"></td>
             </tr>
             <tr>
-                <td class="left-align">Temp. Entrada Evaporador (°C)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Ambiente UI"></td>
+                <td class="left-align">RPM Declarada</td>
+                <td><input type="text" class="input-table text-center" placeholder="Cantidad"></td>
                 <td><input type="text" class="input-table text-center"></td>
                 <td><input type="text" class="input-table text-center"></td>
             </tr>
             <tr>
-                <td class="left-align">Temp. Salida Evaporador (°C)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Inyección UI"></td>
+                <td class="left-align">Sonido de rulemanes</td>
+                <td><input type="text" class="input-table text-center" placeholder="Pasa o no"></td>
                 <td><input type="text" class="input-table text-center"></td>
                 <td><input type="text" class="input-table text-center"></td>
             </tr>
             <tr>
-                <td class="left-align">Salto Térmico ΔT (Óptimo > 12°C)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Diferencia"></td>
+                <td class="left-align">Fugas de agua</td>
+                <td><input type="text" class="input-table text-center" placeholder="Detectada"></td>
                 <td><input type="text" class="input-table text-center"></td>
                 <td><input type="text" class="input-table text-center"></td>
             </tr>
             <tr>
-                <td class="left-align">Aislación Térmica en Caños</td>
+                <td class="left-align">Suciedad del equipo</td>
                 <td class="text-center">Visual</td>
                 <td class="text-center">
                     <label class="label-check"><input type="checkbox" class="custom-check"> Regular</label> &nbsp; 
@@ -144,24 +144,17 @@
     <div class="section-title">4. Tareas de Mantenimiento Ejecutadas</div>
     <div class="checklist-container">
         <div class="checklist-box">
-            <div class="checklist-header">Unidad Interior (Evaporador)</div>
+            <div class="checklist-header">Control general</div>
             <div class="checklist-body">
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza a presión de filtros de aire</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Desinfección de serpentina</label></div>
-                <div class="checklist-item"><span class="checkbox-placeholder"></span><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza e inspección de turbina</label></div>
+                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Control de estabilidad y nivelación (evita vibraciones excesivas)</label></div>
+                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Verificación de estado de rodamientos/ruido en centrifugado</label></div>
+                <div class="checklist-item"><span class="checkbox-placeholder"></span><label class="label-check"><input type="checkbox" class="custom-check"> Prueba funcional de blocapuerta y sensores de nivel de agua</label></div>
                 <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza y prueba libre de drenaje</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Control de sensores de temperatura</label></div>
+                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Inspección de manguera de desagote y sifón</label></div>
             </div>
         </div>
         <div class="checklist-box">
-            <div class="checklist-header">Unidad Exterior (Condensador)</div>
-            <div class="checklist-body">
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza de serpentina condensadora</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Inspección visual/física de capacitores</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Verificación y ajuste de bornes eléctricos</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Control de vibraciones</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Detección visual de fugas (rastros aceite)</label></div>
-            </div>
+            
         </div>
     </div>
 

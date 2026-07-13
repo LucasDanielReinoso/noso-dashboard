@@ -1,10 +1,8 @@
 {
-  "name": "NOSO Dashboard",
-  "short_name": "NOSO-Data",
-  "start_url": "./index.html",
+  "name": "NOSO Planillas",
+  "short_name": "NOSO",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0B132B",
-  "theme_color": "#5BC0BE",
   "icons": [
     {
       "src": "icono.png",

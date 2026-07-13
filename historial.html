@@ -2,9 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard NOSO </title>
+    <title>Dashboard NOSO Professional</title>
     <link type="image/png" sizes="16x16" rel="icon" href="favicon.png">
-    <link rel="manifest" href="manifest.json">
     <style>
         :root { 
             --noso-azul: #1a365d; --noso-azul-claro: #2b6cb0; --noso-rojo: #e53e3e; --fondo: #f0f4f8; --texto: #2d3748; --card: #ffffff; --hover: #edf2f7;
@@ -34,7 +33,8 @@
         #cuerpoTabla tr { display: table; width: 100%; table-layout: fixed; }
         .historial-table thead { display: table; width: 100%; table-layout: fixed; }
         
-        .ranking-item { flex: 1; display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #4a5568; font-size: 1.1rem; }
+        .ranking-item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #4a5568; font-size: 1.1rem; }
+        
         .btn-control { padding: 10px 15px; border-radius: 30px; cursor: pointer; border: none; font-weight: bold; background: var(--noso-azul); color: white; margin-left: 5px; }
         .btn-night { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: var(--noso-azul); color: white; border-radius: 30px; cursor: pointer; border: none; font-weight: bold; }
     </style>
@@ -50,7 +50,7 @@
 
 <div class="container">
     <div class="header-actions">
-        <a href="index.html" class="btn-volver">← Nueva Ficha</a>
+        <a href="selector.html" class="btn-volver">← Nueva Ficha</a>
         <input type="text" id="buscador" style="padding: 12px; width: 300px; border: 2px solid #cbd5e0; border-radius: 8px; background: var(--card); color: var(--texto);" placeholder="🔍 Buscar cliente..." onkeyup="filtrarTabla()">
     </div>
 
@@ -61,7 +61,7 @@
     
     <table class="historial-table" id="tablaHistorial">
         <thead>
-            <tr><th>Fecha</th><th>Cliente</th><th>Teléfono</th><th>Dirección</th><th>Equipo</th><th>Presupuesto ($)</th><th>Estado</th></tr>
+            <tr><th>Fecha</th><th>Cliente</th><th>Categoría</th><th>Equipo</th><th>Presupuesto ($)</th><th>Estado</th></tr>
         </thead>
         <tbody id="cuerpoTabla"></tbody>
     </table>
@@ -70,12 +70,6 @@
     <div class="resumen-box">
         <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; color: var(--noso-azul);">Intensidad de Trabajo por Mes</div>
         <div id="dashboardMeses" style="display: flex; gap: 10px; justify-content: center; width: 100%; align-items: flex-end; height: 180px;"></div>
-    </div>
-
-    <div class="section-title">💰 FACTURACIÓN MENSUAL</div>
-    <div class="resumen-box">
-        <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; color: var(--noso-azul);">Ingresos Totales por Mes</div>
-        <div id="dashboardDinero" style="display: flex; gap: 10px; justify-content: center; width: 100%; align-items: flex-end; height: 180px;"></div>
     </div>
     
     <div class="section-title">👥 CLIENTES</div>
@@ -111,64 +105,48 @@
         const fServicio = new Date(p[2], p[1] - 1, p[0]);
         const dias = Math.ceil((new Date(fServicio.getTime() + 31536000000) - hoy) / 86400000);
         if (dias < 0) return { dias, texto: 'Vencido', color: 'var(--noso-rojo)' };
-        if (dias <= 30) return { dias, texto: `Faltan ${dias} días`, color: 'var(--noso-rojo)' };
         return { dias, texto: `Faltan ${dias} días`, color: 'var(--noso-azul-claro)' };
     }
 
-    function renderizarTablasYGraficos() {
+    function renderizarTabla(datos) {
         cuerpoTabla.innerHTML = '';
         let vCount = 0;
-        historial.sort((a,b) => obtenerInfoMantenimiento(a.fecha).dias - obtenerInfoMantenimiento(b.fecha).dias);
-        historial.forEach(f => {
+        datos.sort((a,b) => obtenerInfoMantenimiento(a.fecha).dias - obtenerInfoMantenimiento(b.fecha).dias);
+        datos.forEach(f => {
             const info = obtenerInfoMantenimiento(f.fecha);
-            if (info.dias <= 30) vCount++;
+            if (info.dias <= 30 && info.dias > 0) vCount++;
             const pres = parseFloat(f.presupuesto || 0).toLocaleString('es-AR');
-            cuerpoTabla.innerHTML += `<tr><td>${f.fecha||'-'}</td><td>${f.cliente||'-'}</td><td>${f.telefono||'-'}</td><td>${f.direccion||'-'}</td><td>${f.marca||'-'}/${f.modelo||'-'}</td><td>$${pres}</td><td style="font-weight:900; color:${info.color}">${info.texto}</td></tr>`;
+            // Aquí incluimos la columna de categoría[cite: 5]
+            cuerpoTabla.innerHTML += `<tr>
+                <td>${f.fecha||'-'}</td><td>${f.cliente||'-'}</td><td>${f.categoria||'N/A'}</td>
+                <td>${f.marca||'-'}</td><td>$${pres}</td>
+                <td style="font-weight:900; color:${info.color}">${info.texto}</td>
+            </tr>`;
         });
-        textoResumen.innerText = `⚠️ Tienes ${vCount} servicios vencidos o próximos a vencer.`;
+        textoResumen.innerText = `⚠️ Tienes ${vCount} servicios próximos a vencer.`;
+    }
 
-        const dashboardMeses = document.getElementById('dashboardMeses');
-        const dashboardDinero = document.getElementById('dashboardDinero');
+    function renderizarEstadisticas() {
+        const dashboard = document.getElementById('dashboardMeses');
         const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
         const conteo = new Array(12).fill(0);
-        const dinero = new Array(12).fill(0);
-        
-        historial.forEach(f => {
-            if(f.fecha) {
-                const mes = parseInt(f.fecha.split('/')[1]) - 1;
-                conteo[mes]++;
-                dinero[mes] += parseFloat(f.presupuesto || 0);
-            }
-        });
-
-        const maxServicios = Math.max(...conteo, 1);
-        const maxDinero = Math.max(...dinero, 1);
-
-        dashboardMeses.innerHTML = conteo.map((cant, i) => `
+        historial.forEach(f => f.fecha && conteo[parseInt(f.fecha.split('/')[1], 10) - 1]++);
+        dashboard.innerHTML = conteo.map((cant, i) => `
             <div style="text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center;">
-                <div style="background: #edf2f7; height: 150px; width: 60%; border-radius: 8px 8px 0 0; position: relative; display:flex; justify-content:center; align-items: flex-end;">
-                    <div style="background: ${cant===0?'var(--noso-rojo)':'rgb(26,54,'+(50+cant*10)+')'}; width: 100%; height: ${(cant/maxServicios)*100}%; border-radius: 8px 8px 0 0;"></div>
-                    <span style="position: absolute; color: white; font-weight: 800; font-size: 0.9rem; top: 120px;">${cant>0?cant:''}</span>
+                <div style="background: #edf2f7; height: 150px; width: 60%; border-radius: 8px 8px 0 0; position: relative;">
+                    <div style="background: ${cant===0?'var(--noso-rojo)':'var(--noso-azul)'}; width: 100%; height: ${(cant/25)*100}%; border-radius: 8px 8px 0 0; position: absolute; bottom: 0;"></div>
                 </div>
                 <div style="font-size: 0.8rem; margin-top: 10px; font-weight: bold;">${meses[i]}</div>
             </div>`).join('');
-
-        dashboardDinero.innerHTML = dinero.map((monto, i) => {
-            let color = '#f56565';
-            if (monto > (maxDinero * 0.7)) color = '#48bb78';
-            else if (monto > 0) color = '#ecc94b';
-            
-            return `
-            <div style="text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center;" title="Ganancia: $${monto.toLocaleString('es-AR')}">
-                <div style="background: #edf2f7; height: 150px; width: 60%; border-radius: 8px 8px 0 0; position: relative;">
-                    <div style="background: ${color}; position: absolute; bottom: 0; width: 100%; height: ${(monto/maxDinero)*100}%; border-radius: 8px 8px 0 0;"></div>
-                </div>
-                <div style="font-size: 0.8rem; margin-top: 10px; font-weight: bold;">${meses[i]}</div>
-            </div>`;
-        }).join('');
     }
 
-    renderizarTablasYGraficos();
+    function filtrarTabla() {
+        const busqueda = document.getElementById('buscador').value.toLowerCase();
+        renderizarTabla(historial.filter(f => (f.cliente||'').toLowerCase().includes(busqueda) || (f.categoria||'').toLowerCase().includes(busqueda)));
+    }
+
+    renderizarTabla(historial);
+    renderizarEstadisticas();
 </script>
 </body>
 </html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Categorías</title>
+    <link type="image/png" sizes="16x16" rel="icon" href="favicon.png">
+    <style>
+        :root { 
+            --card-bg: rgba(28, 37, 65, 0.65); 
+            --accent: #5BC0BE; 
+            --texto: #FFFFFF; 
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background-image: url('fondo.avif'); /* Imagen cargada correctamente */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Capa de oscurecimiento ajustada para más brillo y viveza */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Bajamos la opacidad de 0.75 a 0.55 para que pase más luz */
+            background: rgba(11, 19, 43, 0.25); 
+            /* Añadimos un filtro para que los colores resalten más */
+            backdrop-filter: saturate(120%) brightness(105%);
+            z-index: 0;
+        }
+
+        .container { 
+            text-align: center; 
+            max-width: 500px; 
+            width: 85%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-name { 
+            color: rgb(36, 36, 36); 
+            font-size: 2rem; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        h1 { margin-bottom: 40px; color: var(--texto); font-weight: 700; font-size: 1.8rem; }
+
+        .btn-grid { display: flex; flex-direction: column; gap: 20px; }
+
+        .btn-equipo { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 15px; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.4s; 
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-equipo:hover { 
+            background: var(--accent); 
+            color: #0B132B; 
+            transform: scale(1.03); 
+            box-shadow: 0 10px 20px rgba(91, 192, 190, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="brand-name">NOSO Electromecánica</div>
+        <h1>Selecciona el equipo a cargar</h1>
+        
+        <!-- En tu archivo selector.html, actualiza los href de esta forma: -->
+<div class="btn-grid">
+    <a href="index.html" class="btn-equipo"> Aires Acondicionados</a>
+    <a href="index_heladera.html" class="btn-equipo"> Heladeras - Freezer</a>
+    <a href="index_lavarropas.html" class="btn-equipo"> Lavarropas - Otros</a>
+</div>
+    </div>
+
+</body>
+</html>

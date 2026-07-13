@@ -1,7 +1,8 @@
 function guardarYImprimir() {
-    // Eliminamos cualquier punto o símbolo para guardar solo el número puro
-    let valorPresupuesto = document.getElementById('presupuesto')?.value || "0";
-    let valorNumerico = parseFloat(valorPresupuesto.replace(/\./g, '').replace(',', '.')) || 0;
+    // Captura los valores de los nuevos campos
+    // Usamos .value para obtener lo que escribiste en los inputs del HTML
+    const presupuestoVal = document.getElementById('presupuesto')?.value || "0";
+    const categoriaVal = document.getElementById('categoria')?.value || "General";
 
     const fichaData = {
         fecha: document.getElementById('fecha')?.value || new Date().toLocaleDateString(),
@@ -11,7 +12,9 @@ function guardarYImprimir() {
         marca: document.getElementById('marca')?.value || "N/A",
         modelo: document.getElementById('modelo')?.value || "N/A",
         capacidad: document.getElementById('capacidad')?.value || "N/A",
-        presupuesto: valorNumerico, // Guardamos el número puro
+        // Aquí guardamos los datos nuevos
+        presupuesto: presupuestoVal,
+        categoria: categoriaVal,
         timestamp: new Date().toLocaleString()
     };
 
@@ -20,8 +23,11 @@ function guardarYImprimir() {
         return;
     }
 
+    // Guardado en el historial
     let historial = JSON.parse(localStorage.getItem('noso_historial') || '[]');
     historial.push(fichaData);
     localStorage.setItem('noso_historial', JSON.stringify(historial));
+    
+    // Imprimir el documento
     window.print();
 }
