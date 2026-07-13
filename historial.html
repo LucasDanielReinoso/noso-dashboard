@@ -2,151 +2,73 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard NOSO Professional</title>
-    <link type="image/png" sizes="16x16" rel="icon" href="favicon.png">
+    <title>Historial NOSO - Nube</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        :root { 
-            --noso-azul: #1a365d; --noso-azul-claro: #2b6cb0; --noso-rojo: #e53e3e; --fondo: #f0f4f8; --texto: #2d3748; --card: #ffffff; --hover: #edf2f7;
-        }
-        .dark-mode { 
-            --noso-azul: #63b3ed; --noso-azul-claro: #4299e1; --noso-rojo: #fc8181; --fondo: #0f172a; --texto: #e2e8f0; --card: #1e293b; --hover: #2d3748;
-        }
-
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--fondo); color: var(--texto); margin: 0; padding: 20px; transition: 0.3s; }
-        .container { max-width: 1100px; margin: auto; }
-        
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .btn-volver { padding: 12px 25px; background: var(--noso-azul-claro); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-volver:hover { background: var(--noso-azul); transform: translateY(-2px); }
-        
-        .resumen-box { background: var(--card); border-top: 5px solid var(--noso-azul); padding: 25px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
-        .resumen-texto { font-size: 1.2rem; color: var(--noso-azul); font-weight: 800; }
-
-        .section-title { font-size: 1.6rem; color: var(--noso-azul); font-weight: 900; margin: 40px 0 20px; text-transform: uppercase; border-left: 5px solid var(--noso-azul-claro); padding-left: 15px; }
-        
-        .historial-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .historial-table th { background-color: var(--noso-azul); color: white; padding: 18px; font-size: 0.9rem; text-align: left; }
-        .historial-table td { padding: 15px; border-bottom: 1px solid #4a5568; font-size: 0.95rem; }
-        .historial-table tr:hover { background-color: var(--hover); cursor: pointer; }
-    
-        #cuerpoTabla { display: block; max-height: 400px; overflow-y: auto; }
-        #cuerpoTabla tr { display: table; width: 100%; table-layout: fixed; }
-        .historial-table thead { display: table; width: 100%; table-layout: fixed; }
-        
-        .ranking-item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #4a5568; font-size: 1.1rem; }
-        
-        .btn-control { padding: 10px 15px; border-radius: 30px; cursor: pointer; border: none; font-weight: bold; background: var(--noso-azul); color: white; margin-left: 5px; }
-        .btn-night { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: var(--noso-azul); color: white; border-radius: 30px; cursor: pointer; border: none; font-weight: bold; }
+        .container { max-width: 1000px; margin: auto; padding: 20px; font-family: sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #1a365d; color: white; }
     </style>
 </head>
 <body>
 
-<button class="btn-night" onclick="toggleDarkMode()">🌙 Modo Noche</button>
-<div style="position: fixed; top: 70px; right: 20px; display: flex; gap: 5px;">
-    <button class="btn-control" title="Guardar" onclick="exportarBackup()">💾</button>
-    <button class="btn-control" title="Cargar" onclick="document.getElementById('inputArchivo').click()">📁</button>
-    <input type="file" id="inputArchivo" style="display:none" onchange="importarBackup(event)">
-</div>
-
 <div class="container">
-    <div class="header-actions">
-        <a href="selector.html" class="btn-volver">← Nueva Ficha</a>
-        <input type="text" id="buscador" style="padding: 12px; width: 300px; border: 2px solid #cbd5e0; border-radius: 8px; background: var(--card); color: var(--texto);" placeholder="🔍 Buscar cliente..." onkeyup="filtrarTabla()">
-    </div>
-
-    <div class="section-title">📋 Historial de Servicios</div>
-    <div class="resumen-box" id="resumenAtencion">
-        <div class="resumen-texto" id="textoResumen">Cargando datos...</div>
-    </div>
-    
-    <table class="historial-table" id="tablaHistorial">
+    <h1>Historial de Servicios</h1>
+    <table>
         <thead>
-            <tr><th>Fecha</th><th>Cliente</th><th>Categoría</th><th>Equipo</th><th>Presupuesto ($)</th><th>Estado</th></tr>
+            <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Categoría</th>
+                <th>Presupuesto</th>
+            </tr>
         </thead>
-        <tbody id="cuerpoTabla"></tbody>
+        <tbody id="lista-historial">
+            <tr><td colspan="4">Cargando datos desde la nube...</td></tr>
+        </tbody>
     </table>
-
-    <div class="section-title">📊 ANALÍTICA PROFESIONAL</div>
-    <div class="resumen-box">
-        <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; color: var(--noso-azul);">Intensidad de Trabajo por Mes</div>
-        <div id="dashboardMeses" style="display: flex; gap: 10px; justify-content: center; width: 100%; align-items: flex-end; height: 180px;"></div>
-    </div>
-    
-    <div class="section-title">👥 CLIENTES</div>
-    <div class="resumen-box">
-        <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; color: var(--noso-azul);">🏆 Top de Clientes Estrella </div>
-        <div id="listaRanking"></div>
-    </div>
 </div>
 
-<script>
-    let historial = JSON.parse(localStorage.getItem('noso_historial') || '[]');
-    const cuerpoTabla = document.getElementById('cuerpoTabla');
-    const textoResumen = document.getElementById('textoResumen');
-    const hoy = new Date(); 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-    function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
+    const firebaseConfig = {
+        apiKey: "AIzaSyDGgl81VNAPQjn7VY5nM5jCVjM3jYuPJcE",
+        projectId: "noso-database",
+        storageBucket: "noso-database.firebasestorage.app",
+        appId: "1:12584345878:web:e16f2d118621ef3caf7037"
+    };
 
-    function exportarBackup() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(historial));
-        const a = document.createElement('a'); a.href = dataStr; a.download = "backup_noso.json"; a.click();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function cargarHistorial() {
+        const lista = document.getElementById('lista-historial');
+        try {
+            const querySnapshot = await getDocs(collection(db, "servicios"));
+            lista.innerHTML = ""; 
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const fila = `<tr>
+                    <td>${data.fecha || '-'}</td>
+                    <td>${data.cliente || '-'}</td>
+                    <td>${data.categoria || '-'}</td>
+                    <td>$${data.presupuesto || '0'}</td>
+                </tr>`;
+                lista.innerHTML += fila;
+            });
+        } catch (error) {
+            lista.innerHTML = `<tr><td colspan="4">Error al cargar: ${error.message}</td></tr>`;
+        }
     }
 
-    function importarBackup(e) {
-        if (!confirm("⚠️ ATENCIÓN: Sobrescribirá datos actuales.")) return;
-        const reader = new FileReader();
-        reader.onload = (e) => { localStorage.setItem('noso_historial', e.target.result); location.reload(); };
-        reader.readAsText(e.target.files[0]);
-    }
-
-    function obtenerInfoMantenimiento(fechaStr) {
-        if (!fechaStr) return { dias: 999, texto: 'N/A', color: 'var(--noso-azul-claro)' };
-        const p = fechaStr.split('/');
-        const fServicio = new Date(p[2], p[1] - 1, p[0]);
-        const dias = Math.ceil((new Date(fServicio.getTime() + 31536000000) - hoy) / 86400000);
-        if (dias < 0) return { dias, texto: 'Vencido', color: 'var(--noso-rojo)' };
-        return { dias, texto: `Faltan ${dias} días`, color: 'var(--noso-azul-claro)' };
-    }
-
-    function renderizarTabla(datos) {
-        cuerpoTabla.innerHTML = '';
-        let vCount = 0;
-        datos.sort((a,b) => obtenerInfoMantenimiento(a.fecha).dias - obtenerInfoMantenimiento(b.fecha).dias);
-        datos.forEach(f => {
-            const info = obtenerInfoMantenimiento(f.fecha);
-            if (info.dias <= 30 && info.dias > 0) vCount++;
-            const pres = parseFloat(f.presupuesto || 0).toLocaleString('es-AR');
-            // Aquí incluimos la columna de categoría[cite: 5]
-            cuerpoTabla.innerHTML += `<tr>
-                <td>${f.fecha||'-'}</td><td>${f.cliente||'-'}</td><td>${f.categoria||'N/A'}</td>
-                <td>${f.marca||'-'}</td><td>$${pres}</td>
-                <td style="font-weight:900; color:${info.color}">${info.texto}</td>
-            </tr>`;
-        });
-        textoResumen.innerText = `⚠️ Tienes ${vCount} servicios próximos a vencer.`;
-    }
-
-    function renderizarEstadisticas() {
-        const dashboard = document.getElementById('dashboardMeses');
-        const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-        const conteo = new Array(12).fill(0);
-        historial.forEach(f => f.fecha && conteo[parseInt(f.fecha.split('/')[1], 10) - 1]++);
-        dashboard.innerHTML = conteo.map((cant, i) => `
-            <div style="text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center;">
-                <div style="background: #edf2f7; height: 150px; width: 60%; border-radius: 8px 8px 0 0; position: relative;">
-                    <div style="background: ${cant===0?'var(--noso-rojo)':'var(--noso-azul)'}; width: 100%; height: ${(cant/25)*100}%; border-radius: 8px 8px 0 0; position: absolute; bottom: 0;"></div>
-                </div>
-                <div style="font-size: 0.8rem; margin-top: 10px; font-weight: bold;">${meses[i]}</div>
-            </div>`).join('');
-    }
-
-    function filtrarTabla() {
-        const busqueda = document.getElementById('buscador').value.toLowerCase();
-        renderizarTabla(historial.filter(f => (f.cliente||'').toLowerCase().includes(busqueda) || (f.categoria||'').toLowerCase().includes(busqueda)));
-    }
-
-    renderizarTabla(historial);
-    renderizarEstadisticas();
+    cargarHistorial();
 </script>
+
+<script type="module"></script>
+
 </body>
 </html>
