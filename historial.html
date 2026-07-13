@@ -2,38 +2,55 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Historial NOSO - Nube</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Dashboard NOSO Professional</title>
     <style>
-        .container { max-width: 1000px; margin: auto; padding: 20px; font-family: sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #1a365d; color: white; }
+        :root { 
+            --noso-azul-oscuro: #1a365d; 
+            --noso-azul-medio: #3182ce; 
+            --noso-azul-claro: #63b3ed; 
+            --noso-rojo: #e53e3e; 
+            --fondo: #f0f4f8; 
+            --texto: #2d3748; 
+            --blanco: #ffffff;
+        }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--fondo); color: var(--texto); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        .card { background: var(--blanco); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .stats-grid { display: flex; justify-content: space-between; align-items: flex-end; height: 220px; padding-top: 20px; }
+        table { width: 100%; border-collapse: collapse; background: var(--blanco); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #edf2f7; }
+        th { background-color: var(--noso-azul-oscuro); color: white; }
+        .btn-borrar { background: var(--noso-rojo); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .btn-borrar:hover { opacity: 0.8; }
+        h1 { color: var(--noso-azul-oscuro); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Historial de Servicios</h1>
+    <h1>Dashboard NOSO</h1>
+    
+    <div class="card">
+        <h3>Actividad Mensual</h3>
+        <div class="stats-grid" id="dashboardMeses">
+            </div>
+    </div>
+
     <table>
         <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Categoría</th>
-                <th>Presupuesto</th>
-            </tr>
+            <tr><th>Fecha</th><th>Cliente</th><th>Categoría</th><th>Presupuesto</th><th>Acción</th></tr>
         </thead>
         <tbody id="lista-historial">
-            <tr><td colspan="4">Cargando datos desde la nube...</td></tr>
+            <tr><td colspan="5">Cargando datos de la nube...</td></tr>
         </tbody>
     </table>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
+    // Tu configuración de Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDGgl81VNAPQjn7VY5nM5jCVjM3jYuPJcE",
         projectId: "noso-database",
@@ -47,28 +64,73 @@
     async function cargarHistorial() {
         const lista = document.getElementById('lista-historial');
         try {
-            const querySnapshot = await getDocs(collection(db, "servicios"));
-            lista.innerHTML = ""; 
+            const snapshot = await getDocs(collection(db, "servicios"));
+            lista.innerHTML = "";
+            let historial = [];
 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const fila = `<tr>
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                historial.push(data);
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
                     <td>${data.fecha || '-'}</td>
                     <td>${data.cliente || '-'}</td>
-                    <td>${data.categoria || '-'}</td>
+                    <td>${data.categoria || 'General'}</td>
                     <td>$${data.presupuesto || '0'}</td>
-                </tr>`;
-                lista.innerHTML += fila;
+                    <td><button class="btn-borrar" data-id="${docSnap.id}">Borrar</button></td>
+                `;
+                lista.appendChild(fila);
             });
+
+            // Función de borrado
+            document.querySelectorAll('.btn-borrar').forEach(btn => {
+                btn.onclick = async () => {
+                    if(confirm("¿Eliminar este servicio del historial?")) {
+                        await deleteDoc(doc(db, "servicios", btn.dataset.id));
+                        cargarHistorial(); // Recarga la vista
+                    }
+                };
+            });
+
+            renderizarEstadisticas(historial);
         } catch (error) {
-            lista.innerHTML = `<tr><td colspan="4">Error al cargar: ${error.message}</td></tr>`;
+            lista.innerHTML = `<tr><td colspan="5">Error: ${error.message}</td></tr>`;
         }
+    }
+
+    function renderizarEstadisticas(historial) {
+        const dashboard = document.getElementById('dashboardMeses');
+        const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        const conteo = new Array(12).fill(0);
+        
+        historial.forEach(f => {
+            if(f.fecha) {
+                const mes = parseInt(f.fecha.split('/')[1], 10) - 1;
+                if(!isNaN(mes)) conteo[mes]++;
+            }
+        });
+        
+        dashboard.innerHTML = conteo.map((cant, i) => {
+            const altura = cant * 15; // Altura base
+            let color = "#edf2f7"; // Gris por defecto
+            if(cant > 0) color = "var(--noso-azul-claro)";
+            if(cant > 3) color = "var(--noso-azul-medio)";
+            if(cant > 6) color = "var(--noso-azul-oscuro)";
+            
+            return `
+                <div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <div style="background: ${color}; width: 65%; height: ${altura + 20}px; border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                        ${cant > 0 ? cant : ''}
+                    </div>
+                    <small style="margin-top: 10px; font-weight: 600;">${meses[i]}</small>
+                </div>`;
+        }).join('');
     }
 
     cargarHistorial();
 </script>
 
-<script type="module"></script>
+
 
 </body>
 </html>
