@@ -2,195 +2,97 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ficha Técnica NOSO</title>
+    <title>Categorías</title>
     <link type="image/png" sizes="16x16" rel="icon" href="favicon.png">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root { 
+            --card-bg: rgba(28, 37, 65, 0.65); 
+            --accent: #5BC0BE; 
+            --texto: #FFFFFF; 
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background-image: url('fondo.avif'); /* Imagen cargada correctamente */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Capa de oscurecimiento ajustada para más brillo y viveza */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Bajamos la opacidad de 0.75 a 0.55 para que pase más luz */
+            background: rgba(11, 19, 43, 0.25); 
+            /* Añadimos un filtro para que los colores resalten más */
+            backdrop-filter: saturate(120%) brightness(105%);
+            z-index: 0;
+        }
+
+        .container { 
+            text-align: center; 
+            max-width: 500px; 
+            width: 85%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-name { 
+            color: rgb(36, 36, 36); 
+            font-size: 2rem; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        h1 { margin-bottom: 40px; color: var(--texto); font-weight: 700; font-size: 1.8rem; }
+
+        .btn-grid { display: flex; flex-direction: column; gap: 20px; }
+
+        .btn-equipo { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 15px; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.4s; 
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-equipo:hover { 
+            background: var(--accent); 
+            color: #0B132B; 
+            transform: scale(1.03); 
+            box-shadow: 0 10px 20px rgba(91, 192, 190, 0.3);
+        }
+    </style>
 </head>
 <body>
-<div class="ficha-contenedor">
-    <div class="header-banner">
-        <table class="header-table">
-            <tr>
-                <td>
-                    <div class="brand-title">NOSO</div>
-                    <div class="brand-subtitle">Refrigeración & Climatización</div>
-                </td>
-                <td>
-                    <div class="doc-title">FICHA DE SERVICIO TÉCNICO</div>
-                    <div class="doc-meta">
-                        <strong>Ficha N°:</strong> <input type="text" id="fichaNum" placeholder=""> <br>
-                        <strong>Fecha:</strong> <input type="text" id="fecha" placeholder="">
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
 
-    <div class="section-title">1. Datos del Cliente y Ubicación</div>
-    <table class="data-table">
-        <tr>
-            <td class="field-label">Cliente</td>
-            <td class="field-value"><input type="text" id="cliente" class="input-table"></td>
-            <td class="field-label">Teléfono</td>
-            <td class="field-value"><input type="text" id="telefono" class="input-table"></td>
-        </tr>
-        <tr>
-            <td class="field-label">Dirección</td>
-            <td class="field-value"><input type="text" id="direccion" class="input-table"></td>
-            <td class="field-label">Ubicación Eq.</td>
-            <td class="field-value"><input type="text" id="ubicacion" class="input-table"></td>
-        </tr>
-        <!-- AQUI CORREGIMOS: Agregamos Presupuesto y Categoría -->
-        <tr>
-            <td class="field-label">Presupuesto ($)</td>
-            <td class="field-value"><input type="number" id="presupuesto" class="input-table" placeholder="Ej: 45000"></td>
-            <td class="field-label">Categoría</td>
-            <td class="field-value"><input type="text" id="categoria" class="input-table" value="Aires Acondicionados"></td>
-        </tr>
-    </table>
-
-    <div class="section-title">2. Identificación del Equipo (Split)</div>
-    <table class="data-table">
-        <tr>
-            <td class="field-label">Marca</td>
-            <td class="field-value"><input type="text" id="marca" class="input-table"></td>
-            <td class="field-label">Tecnología</td>
-            <td class="field-value text-center">
-                <label class="label-check"><input type="checkbox" class="custom-check"> On-Off</label> &nbsp; &nbsp; 
-                <label class="label-check"><input type="checkbox" class="custom-check"> NoFrost</label>
-            </td>
-        </tr>
-        <tr>
-            <td class="field-label">Modelo</td>
-            <td class="field-value"><input type="text" id="modelo" class="input-table"></td>
-            <td class="field-label">Refrigerante</td>
-            <td class="field-value text-center">
-                <label class="label-check"><input type="checkbox" class="custom-check"> R410A</label> &nbsp; 
-                <label class="label-check"><input type="checkbox" class="custom-check"> R600a</label> &nbsp; 
-                <label class="label-check"><input type="checkbox" class="custom-check"> R134a</label>
-            </td>
-        </tr>
-        <!-- AQUI MOVIMOS LOS IDs FALTANTES DE CAPACIDAD Y SERIE -->
-        <tr>
-            <td class="field-label">Capacidad</td>
-            <td class="field-value"><input type="text" id="capacidad" class="input-table" placeholder="Frigorías / Watts"></td>
-            <td class="field-label">N° Serie</td>
-            <td class="field-value"><input type="text" id="serie" class="input-table"></td>
-        </tr>
-    </table>
-
-    <div class="section-title">3. Protocolo de Mediciones Técnicas</div>
-    <table class="data-table protocol-table">
-        <thead>
-            <tr>
-                <th>Parámetro Operativo</th>
-                <th>Valor de Placa / Nominal</th>
-                <th>Lectura Inicial (Antes)</th>
-                <th>Lectura Final (Entrega)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="left-align">Tensión de Línea (V)</td>
-                <td><input type="text" class="input-table text-center" placeholder="220 V ~"></td>
-                <td><input type="text" class="input-table text-center"></td>
-                <td><input type="text" class="input-table text-center"></td>
-            </tr>
-            <tr>
-                <td class="left-align">Consumo de Corriente (A)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Placa A"></td>
-                <td><input type="text" class="input-table text-center"></td>
-                <td><input type="text" class="input-table text-center"></td>
-            </tr>
-            <tr>
-                <td class="left-align">Presión de Baja (Psi)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Psi"></td>
-                <td><input type="text" class="input-table text-center"></td>
-                <td><input type="text" class="input-table text-center"></td>
-            </tr>
-            <tr>
-                <td class="left-align">Temp. Entrada Evaporador (°C)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Ambiente UI"></td>
-                <td><input type="text" class="input-table text-center"></td>
-                <td><input type="text" class="input-table text-center"></td>
-            </tr>
-            <tr>
-                <td class="left-align">Temp. Salida Evaporador (°C)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Inyección UI"></td>
-                <td><input type="text" class="input-table text-center"></td>
-                <td><input type="text" class="input-table text-center"></td>
-            </tr>
-            <tr>
-                <td class="left-align">Salto Térmico ΔT (Óptimo > 12°C)</td>
-                <td><input type="text" class="input-table text-center" placeholder="Diferencia"></td>
-                <td><input type="text" class="input-table text-center"></td>
-                <td><input type="text" class="input-table text-center"></td>
-            </tr>
-            <tr>
-                <td class="left-align">Aislación Térmica en Caños</td>
-                <td class="text-center">Visual</td>
-                <td class="text-center">
-                    <label class="label-check"><input type="checkbox" class="custom-check"> Regular</label> &nbsp; 
-                    <label class="label-check"><input type="checkbox" class="custom-check"> Mala</label>
-                </td>
-                <td class="text-center">
-                    <label class="label-check"><input type="checkbox" class="custom-check"> Corregido</label> &nbsp; 
-                    <label class="label-check"><input type="checkbox" class="custom-check"> OK</label>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="section-title">4. Tareas de Mantenimiento Ejecutadas</div>
-    <div class="checklist-container">
-        <div class="checklist-box">
-            <div class="checklist-header">Unidad Interior (Evaporador)</div>
-            <div class="checklist-body">
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza a presión de filtros de aire</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Desinfección de serpentina</label></div>
-                <div class="checklist-item"><span class="checkbox-placeholder"></span><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza e inspección de turbina</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza y prueba libre de drenaje</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Control de sensores de temperatura</label></div>
-            </div>
-        </div>
-        <div class="checklist-box">
-            <div class="checklist-header">Unidad Exterior (Condensador)</div>
-            <div class="checklist-body">
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Limpieza de serpentina condensadora</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Inspección visual/física de capacitores</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Verificación y ajuste de bornes eléctricos</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Control de vibraciones</label></div>
-                <div class="checklist-item"><label class="label-check"><input type="checkbox" class="custom-check"> Detección visual de fugas (rastros aceite)</label></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section-title">5. Diagnóstico y Próximo Mantenimiento</div>
-    <div class="obs-box">
-        <textarea class="obs-box-input" placeholder="Escriba detalles del estado general..."></textarea>
-    </div>
-    <div style="font-weight: bold; color: #1a365d; margin-bottom: 15px; font-size: 9pt;">
-        Próxima Visita Sugerida: &nbsp; &nbsp; 
-        <label class="label-check"><input type="checkbox" class="custom-check"> 6 Meses</label> &nbsp; &nbsp; 
-        <label class="label-check"><input type="checkbox" class="custom-check" checked> 12 Meses (Mantenimiento Programado)</label>
-    </div>
-
-    <div class="signature-container">
-        <div class="signature-cell">
-            <div class="signature-line"></div>
-            <div class="signature-label">Firma Técnico Responsable</div>
-        </div>
-        <div class="signature-cell">
-            <div class="signature-line"></div>
-            <div class="signature-label">Firma Cliente de Conformidad</div>
-        </div>
-    </div>
-    
-    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-        <button class="btn-print" onclick="guardarYImprimir()">Imprimir / Guardar PDF</button>
-        <a href="historial.html" class="btn-historial">Ver Historial</a>
-    </div>
-    <script src="script.js"></script>
+    <div class="container">
+        <div class="brand-name">NOSO Electromecánica</div>
+        <h1>Selecciona el equipo a cargar</h1>
+        
+        <!-- En tu archivo selector.html, actualiza los href de esta forma: -->
+<div class="btn-grid">
+    <a href="index.html" class="btn-equipo"> Aires Acondicionados</a>
+    <a href="index_heladera.html" class="btn-equipo"> Heladeras - Freezer</a>
+    <a href="index_lavarropas.html" class="btn-equipo"> Lavarropas - Otros</a>
 </div>
+    </div>
+
 </body>
 </html>
