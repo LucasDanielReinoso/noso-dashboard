@@ -1,5 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+import { firebaseConfig } from "./firebase-config.js"; // IMPORTA LA CONFIG AQUÍ
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ... resto de tu código igual ...
+
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDGgl81VNAPQjn7VY5nM5jCVjM3jYuPJcE",

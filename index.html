@@ -2,119 +2,78 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorías</title>
-    <link type="image/png" sizes="16x16" rel="icon" href="favicon.png">
+    <title>Dashboard NOSO Professional</title>
     <style>
-        :root { 
-            --card-bg: rgba(28, 37, 65, 0.65); 
-            --accent: #5BC0BE; 
-            --texto: #FFFFFF; 
-        }
-
-@media screen and (max-width: 600px) {
-    .container { 
-        width: 95% !important; /* Aprovechamos más el ancho en celular */
-    }
-    
-    .btn-equipo { 
-        padding: 25px 15px !important; /* Más grandes para tocar fácil con el dedo */
-        font-size: 1.2rem !important; 
-    }
-
-    h1 { 
-        font-size: 1.5rem !important; 
-    }
-}
-
-
-body {
-    width: 100vw; /* Asegura que el cuerpo ocupe todo el ancho de la ventana */
-    overflow-x: hidden; /* Evita scroll lateral molesto */
-}
-
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            background-image: url('fondo.avif'); /* Imagen cargada correctamente */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        /* Capa de oscurecimiento ajustada para más brillo y viveza */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            /* Bajamos la opacidad de 0.75 a 0.55 para que pase más luz */
-            background: rgba(11, 19, 43, 0.25); 
-            /* Añadimos un filtro para que los colores resalten más */
-            backdrop-filter: saturate(120%) brightness(105%);
-            z-index: 0;
-        }
-
-        .container { 
-            text-align: center; 
-            max-width: 500px; 
-            width: 85%;
-            position: relative;
-            z-index: 1;
-        }
-
-        .brand-name { 
-            color: rgb(36, 36, 36); 
-            font-size: 2rem; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        h1 { margin-bottom: 40px; color: var(--texto); font-weight: 700; font-size: 1.8rem; }
-
-        .btn-grid { display: flex; flex-direction: column; gap: 20px; }
-
-        .btn-equipo { 
-            background: var(--card-bg); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            color: white; 
-            padding: 20px; 
-            border-radius: 15px; 
-            font-size: 1.1rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: 0.4s; 
-            text-decoration: none;
-            display: block;
-        }
-
-        .btn-equipo:hover { 
-            background: var(--accent); 
-            color: #0B132B; 
-            transform: scale(1.03); 
-            box-shadow: 0 10px 20px rgba(91, 192, 190, 0.3);
-        }
+        :root { --noso-azul-oscuro: #1a365d; --noso-azul-medio: #3182ce; --noso-azul-claro: #63b3ed; --noso-rojo: #e53e3e; --fondo: #f0f4f8; --texto: #2d3748; --blanco: #ffffff; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--fondo); color: var(--texto); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        .card { background: var(--blanco); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .stats-grid { display: flex; justify-content: space-between; align-items: flex-end; height: 220px; padding-top: 20px; }
+        table { width: 100%; border-collapse: collapse; background: var(--blanco); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #edf2f7; }
+        th { background-color: var(--noso-azul-oscuro); color: white; }
+        .btn-borrar { background: var(--noso-rojo); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="brand-name">NOSO Electromecánica</div>
-        <h1>Selecciona el equipo a cargar</h1>
-        
-        <!-- En tu archivo selector.html, actualiza los href de esta forma: -->
-<div class="btn-grid">
-    <a href="index_aires.html" class="btn-equipo"> Aires Acondicionados</a>
-    <a href="index_heladera.html" class="btn-equipo"> Heladeras - Freezer</a>
-    <a href="index_lavarropas.html" class="btn-equipo"> Lavarropas - Otros</a>
-</div>
+<div class="container">
+    <h1>Dashboard NOSO</h1>
+    <div class="card">
+        <h3>Actividad Mensual</h3>
+        <div class="stats-grid" id="dashboardMeses"></div>
     </div>
-<script type="module" src="script.js"></script>
+    <table>
+        <thead>
+            <tr><th>Fecha</th><th>Cliente</th><th>Categoría</th><th>Presupuesto</th><th>Acción</th></tr>
+        </thead>
+        <tbody id="lista-historial"></tbody>
+    </table>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js"; // IMPORTA LA CONFIG AQUÍ
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function cargarHistorial() {
+        const lista = document.getElementById('lista-historial');
+        const snapshot = await getDocs(collection(db, "servicios"));
+        lista.innerHTML = "";
+        let historial = [];
+
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            historial.push(data);
+            const fila = document.createElement('tr');
+            fila.innerHTML = `<td>${data.fecha || '-'}</td><td>${data.cliente || '-'}</td><td>${data.categoria || 'General'}</td><td>$${data.presupuesto || '0'}</td>
+                              <td><button class="btn-borrar" data-id="${docSnap.id}">Borrar</button></td>`;
+            lista.appendChild(fila);
+        });
+
+        document.querySelectorAll('.btn-borrar').forEach(btn => {
+            btn.onclick = async () => { if(confirm("¿Eliminar?")) { await deleteDoc(doc(db, "servicios", btn.dataset.id)); cargarHistorial(); } };
+        });
+        renderizarEstadisticas(historial);
+    }
+
+    function renderizarEstadisticas(historial) {
+        const dashboard = document.getElementById('dashboardMeses');
+        const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        const conteo = new Array(12).fill(0);
+        historial.forEach(f => { const m = parseInt(f.fecha?.split('/')[1]) - 1; if(!isNaN(m)) conteo[m]++; });
+        dashboard.innerHTML = conteo.map((cant, i) => {
+            let color = cant > 6 ? "var(--noso-azul-oscuro)" : (cant > 3 ? "var(--noso-azul-medio)" : "var(--noso-azul-claro)");
+            return `<div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                    <div style="background: ${cant > 0 ? color : '#edf2f7'}; width: 65%; height: ${(cant * 15) + 20}px; border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${cant > 0 ? cant : ''}</div>
+                    <small style="margin-top: 10px; font-weight: 600;">${meses[i]}</small>
+                </div>`;
+        }).join('');
+    }
+    cargarHistorial();
+</script>
 </body>
 </html>
