@@ -31,49 +31,6 @@
     </table>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-    import { firebaseConfig } from "./firebase-config.js"; // IMPORTA LA CONFIG AQUÍ
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function cargarHistorial() {
-        const lista = document.getElementById('lista-historial');
-        const snapshot = await getDocs(collection(db, "servicios"));
-        lista.innerHTML = "";
-        let historial = [];
-
-        snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            historial.push(data);
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${data.fecha || '-'}</td><td>${data.cliente || '-'}</td><td>${data.categoria || 'General'}</td><td>$${data.presupuesto || '0'}</td>
-                              <td><button class="btn-borrar" data-id="${docSnap.id}">Borrar</button></td>`;
-            lista.appendChild(fila);
-        });
-
-        document.querySelectorAll('.btn-borrar').forEach(btn => {
-            btn.onclick = async () => { if(confirm("¿Eliminar?")) { await deleteDoc(doc(db, "servicios", btn.dataset.id)); cargarHistorial(); } };
-        });
-        renderizarEstadisticas(historial);
-    }
-
-    function renderizarEstadisticas(historial) {
-        const dashboard = document.getElementById('dashboardMeses');
-        const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-        const conteo = new Array(12).fill(0);
-        historial.forEach(f => { const m = parseInt(f.fecha?.split('/')[1]) - 1; if(!isNaN(m)) conteo[m]++; });
-        dashboard.innerHTML = conteo.map((cant, i) => {
-            let color = cant > 6 ? "var(--noso-azul-oscuro)" : (cant > 3 ? "var(--noso-azul-medio)" : "var(--noso-azul-claro)");
-            return `<div style="flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center;">
-                    <div style="background: ${cant > 0 ? color : '#edf2f7'}; width: 65%; height: ${(cant * 15) + 20}px; border-radius: 6px 6px 0 0; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${cant > 0 ? cant : ''}</div>
-                    <small style="margin-top: 10px; font-weight: 600;">${meses[i]}</small>
-                </div>`;
-        }).join('');
-    }
-    cargarHistorial();
-</script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
